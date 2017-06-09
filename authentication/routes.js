@@ -31,7 +31,7 @@ module.exports = function() {
 				const returnUrl = req.session.returnUrl || "/";
 		    const expiresIn = 60 * 60 * 24 * 180; // 180 days
 		    const token = jwt.sign(req.user, auth.jwt.secret, { expiresIn });
-		    res.cookie('id_token', token, { domain:'herokuapp.com', maxAge: 1000 * expiresIn, httpOnly: true });
+		    res.cookie('id_token', token, { maxAge: 1000 * expiresIn, httpOnly: true });
 		    res.redirect(returnUrl);
 		  }
 		);
