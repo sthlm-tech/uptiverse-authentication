@@ -13,7 +13,7 @@ passport.use(new GoogleStrategy({
 }, (req, accessToken, refreshToken, profile, done) => {
   const loginName = 'google';
   const claimType = 'urn:google:access_token';
-  const fooBar = async () => {
+  function fooBar() {
     if( !profile.email || (profile.email && !profile.email.endsWith('@uptive.se'))){
       done(null);
     }
@@ -49,7 +49,7 @@ passport.use(new GoogleStrategy({
   };
 
 
-  fooBar().catch(done);
+  fooBar();
 }));
 
 module.exports = passport;
