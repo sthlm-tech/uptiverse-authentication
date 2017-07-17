@@ -6,9 +6,10 @@
   "dependencies": {
     "cookie-parser": "^1.4.3",
     "express-session": "^1.15.3",
+    "express-jwt": "5.1.0",
     "jsonwebtoken": "^7.1.9",
     "mongoose": "^4.5.10",
-    "ms-core": "^0.0.7",
+    "ms-core": "^0.0.9",
     "passport": "^0.3.2",
     "passport-google-oauth2": "0.1.6",
     "passport-jwt": "^2.2.0",

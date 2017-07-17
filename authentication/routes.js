@@ -1,9 +1,12 @@
 var App = require("ms-core");
-var passport = require("./passport");
+var url = require('url');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var expressJwt = require('express-jwt');
 var jwt = require('jsonwebtoken');
+var passport = require("./passport");
 var auth = require("./../config.js").auth;
+
 const baseUrl = "/authentication";
 
 var sessionData = { secret: 'secret session key', cookie: { maxAge: 60000 }};
@@ -29,11 +32,34 @@ module.exports = function() {
 		  passport.authenticate('google', { failureRedirect: '/', session: false }),
 		  (req, res) => {
 				const returnUrl = req.session.returnUrl || "/";
+				const domain = url.parse(returnUrl).hostname;
 		    const expiresIn = 60 * 60 * 24 * 180; // 180 days
 		    const token = jwt.sign(req.user, auth.jwt.secret, { expiresIn });
-		    res.cookie('id_token', token, {domain:'uptiverse.se', maxAge: 1000 * expiresIn, httpOnly: true });
+		    res.cookie('id_token', token, {domain: domain, maxAge: 1000 * expiresIn, httpOnly: true });
 		    res.redirect(returnUrl);
 		  }
 		);
 
+		App.Express.get(baseUrl + '/logout',
+		  function(req, res, next){
+				var returnUrl = req.query.url || req.hostname || "/";
+				res.clearCookie('id_token');
+		    res.redirect(returnUrl);
+		    return;
+		  }
+		);
+
+		App.Express.get(baseUrl + '/validation/user',
+			expressJwt({
+				secret: auth.jwt.secret,
+				credentialsRequired: true,
+				getToken: function(req){
+					return req.cookies.id_token || null;
+				}
+			}),
+			function(req, res, next){
+				const user = req.user || null;
+				res.send(user);
+			}
+		);
 };
