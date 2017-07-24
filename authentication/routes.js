@@ -32,7 +32,7 @@ module.exports = function() {
 		  passport.authenticate('google', { failureRedirect: '/', session: false }),
 		  (req, res) => {
 				const returnUrl = req.session.returnUrl || "/";
-				const domain = url.parse(returnUrl).hostname;
+				const domain = parseDomain(returnUrl);
 		    const expiresIn = 60 * 60 * 24 * 180; // 180 days
 		    const token = jwt.sign(req.user, auth.jwt.secret, { expiresIn });
 		    res.cookie('id_token', token, {domain: domain, maxAge: 1000 * expiresIn, httpOnly: true });
@@ -63,3 +63,11 @@ module.exports = function() {
 			}
 		);
 };
+
+function parseDomain(urlToParse){
+	var hostname = url.parse(urlToParse).hostname;
+	var separate = hostname.split('.');
+	separate.shift();
+	var currentdomain = separate.join('.');
+	return currentdomain;
+}
