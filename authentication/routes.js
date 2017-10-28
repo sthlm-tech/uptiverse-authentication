@@ -49,7 +49,8 @@ module.exports = function() {
 		App.Express.get(baseUrl + '/logout',
 		  function(req, res, next){
 				var returnUrl = req.query.url || req.hostname || "/";
-				res.clearCookie('id_token');
+				const domain = parseDomain(returnUrl);
+				res.clearCookie('id_token', {domain: domain,  path: '/' });
 		    res.redirect(returnUrl);
 		    return;
 		  }
