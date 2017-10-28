@@ -37,6 +37,12 @@ module.exports = function() {
 		    const token = jwt.sign(req.user, auth.jwt.secret, { expiresIn });
 		    res.cookie('id_token', token, {domain: domain, maxAge: 1000 * expiresIn, httpOnly: true });
 		    res.redirect(returnUrl);
+
+				App.Communicator.sendMessage(
+					"USER_LOGIN",
+					"DATA_SYNC",
+					{ "data": req.user }
+				);
 		  }
 		);
 
