@@ -54,10 +54,10 @@ module.exports = function() {
 				App.Communicator.sendMessage(
 					"USER_LOGIN",
 					"DATA_SYNC",
-					{ text: employee.firstname + " " + employee.lastname +" logged in.", 
-						"data": {
+					{ text: employee.firstname + " " + employee.lastname +" logged in.",
+						data: {
 							connection: "mail",
-							id: employee.connections.mail,
+							id: employee.connections.mail.id,
 							employee: employee
 						}
 					}
