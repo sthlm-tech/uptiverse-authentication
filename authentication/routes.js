@@ -38,10 +38,29 @@ module.exports = function() {
 		    res.cookie('id_token', token, {domain: domain, maxAge: 1000 * expiresIn, httpOnly: true });
 		    res.redirect(returnUrl);
 
+				const user = req.user;
+	      const picture = user.profile.photos[0].value.split("?")[0];
+	      var employee = {
+	        firstname: user.name.firstname,
+	        lastname: user.name.lastname,
+	        username: user.username,
+	        picture : picture,
+	        connections:{
+	          mail: {id: user.email},
+	          google: {id: user.id},
+	        }
+	      };
+
 				App.Communicator.sendMessage(
 					"USER_LOGIN",
 					"DATA_SYNC",
-					{ text:"user logedin: " + JSON.stringify(req.user ), "data": req.user }
+					{ text: employee.firstname + " " + employee.lastname +" logged in.", 
+						"data": {
+							connection: "mail",
+							id: employee.connections.mail,
+							employee: employee
+						}
+					}
 				);
 		  }
 		);
