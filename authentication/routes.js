@@ -41,7 +41,7 @@ module.exports = function() {
 				App.Communicator.sendMessage(
 					"USER_LOGIN",
 					"DATA_SYNC",
-					{ "data": req.user }
+					{ text:"user logedin: " + JSON.stringify(req.user ), "data": req.user }
 				);
 		  }
 		);
