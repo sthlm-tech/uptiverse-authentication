@@ -86,6 +86,13 @@ module.exports = function() {
 			function(req, res, next){
 				const user = req.user || null;
 				res.send(user);
+				App.Communicator.sendMessage(
+					"USER_VALIDATED",
+					"LOG",
+					{
+						text: "Validated token for " + user.name.firstname + " " + user.name.lastname
+					}
+				);
 			}
 		);
 };
