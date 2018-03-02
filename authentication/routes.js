@@ -5,6 +5,7 @@ var session = require('express-session');
 var expressJwt = require('express-jwt');
 var jwt = require('jsonwebtoken');
 var passport = require("./passport");
+var services = require("./service-service");
 var auth = require("./../config.js").auth;
 
 const baseUrl = "/authentication";
@@ -95,6 +96,38 @@ module.exports = function() {
 				);
 			}
 		);
+
+		App.Express.post(baseUrl + '/service/:servicename',
+			function(req, res, next){
+				services.create(req.params.servicename)
+				.then(function(service){
+					res.send("Created");
+				});
+			}
+		);
+
+		App.Express.post(baseUrl + '/service',
+			function(req, res, next){
+				services.getByKey(req.body.servicename)
+				.then(function(service){
+					if(service && service.secret === req.body.password){
+						const expiresIn = 60 * 60 * 24 * 365 * 1; // 1 year
+						const account = {
+							isServiceAccount: true,
+							email: req.body.servicename +"@uptiverse.se",
+							name:{
+								service: req.body.servicename
+							}
+						};
+						const token = jwt.sign(account, auth.jwt.secret, { expiresIn });
+						res.send(token);
+					}else{
+						res.status(401).send("Unathorized");
+					}
+				});
+			}
+		);
+
 };
 
 function parseDomain(urlToParse){
